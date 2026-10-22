@@ -238,12 +238,10 @@ document.getElementById("shippingForm").addEventListener("submit", e => {
     "🪪 DNI/CE: " + v("dni"),
     "🏢 Agencia: " + agencyTitle(selectedAgency),
     "📍 Dirección: " + (agencyAddress(selectedAgency) || "No indicada"),
-    "🗺️ Departamento: " + (agencyDepartment(selectedAgency) || departmentSelect.value),
     "🚚 Shalom",
     "📅 Fecha de envío: " + formattedDate,
     "🛍️ Pedido: " + (v("order") || "No indicado"),
     "",
-    "Por favor, confirmar los datos del envío."
   ].join("\n");
   window.open("https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(msg), "_blank", "noopener,noreferrer");
 });
