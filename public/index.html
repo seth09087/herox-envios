@@ -30,6 +30,8 @@ button.submit{width:100%;border:0;border-radius:16px;background:var(--orange);co
 button.submit:hover{background:#c96500}
 footer{text-align:center;font-size:11px;color:#64748b;padding:16px}
 .error{display:none;background:#fff1f2;color:#9f1239;padding:11px;border-radius:10px;margin-bottom:14px;font-size:13px}
+.screen-hidden{display:none!important}
+button.secondary{width:100%;border:0;border-radius:16px;background:#fff;color:var(--ink);padding:12px;font-size:14px;font-weight:700;cursor:pointer;margin-top:10px;border:1px solid var(--line)}
 @media(max-width:520px){.grid{grid-template-columns:1fr}.card{padding:19px}.brand{font-size:24px}}
 </style>
 </head>
@@ -39,6 +41,16 @@ footer{text-align:center;font-size:11px;color:#64748b;padding:16px}
   <div class="notice">ⓘ Verifica cuidadosamente la agencia Shalom y los datos del destinatario antes de solicitar el envío.</div>
   <div id="error" class="error"></div>
   <form id="shippingForm">
+    <div id="screenOne">
+      <section class="card">
+        <h2>Comencemos con tu WhatsApp</h2>
+        <p class="desc">Ingresa tu número para continuar con los datos del envío.</p>
+        <label for="phone">Tu WhatsApp</label>
+        <input id="phone" inputmode="tel" autocomplete="tel" maxlength="20" required placeholder="Ej. 961589198">
+        <button class="submit" id="continueButton" type="button">Solicitar envío</button>
+      </section>
+    </div>
+    <div id="screenTwo" class="screen-hidden">
     <section class="card">
       <h2><span class="step">1</span>Detalles del envío</h2>
       <p class="desc">Primero elige el departamento del Perú. Después podrás buscar y seleccionar una agencia Shalom disponible en esa zona.</p>
@@ -67,8 +79,6 @@ footer{text-align:center;font-size:11px;color:#64748b;padding:16px}
     <section class="card">
       <h2><span class="step">2</span>Datos del destinatario</h2>
       <p class="desc">Persona autorizada para recoger el paquete en la agencia con su documento.</p>
-      <label for="phone">Tu WhatsApp / celular *</label>
-      <input id="phone" inputmode="tel" autocomplete="tel" maxlength="20" required placeholder="Ej. 961589198">
       <div class="grid">
         <div><label for="firstName">Nombres *</label><input id="firstName" autocomplete="given-name" required maxlength="60"></div>
         <div><label for="lastName">Apellidos *</label><input id="lastName" autocomplete="family-name" required maxlength="80"></div>
@@ -80,6 +90,8 @@ footer{text-align:center;font-size:11px;color:#64748b;padding:16px}
       <label class="consent"><input id="consent" type="checkbox" required><span>Autorizo a HEROX a usar estos datos para coordinar este envío y contactarme sobre el pedido.</span></label>
       <button class="submit" type="submit">Solicitar envío por WhatsApp</button>
     </section>
+    <button class="secondary" id="backButton" type="button">Volver</button>
+    </div>
   </form>
   <p class="small">El catálogo consultado es un servicio externo independiente, no una integración oficial garantizada por Shalom. Verifica los datos de la agencia antes de enviar. Este formulario abre WhatsApp; no crea una guía oficial ni guarda pedidos.</p>
   <footer>© HEROX · Registro de envíos</footer>
@@ -96,6 +108,30 @@ const errorBox = document.getElementById("error");
 let selectedAgency = null;
 let requestController = null;
 let debounceTimer = null;
+const screenOne = document.getElementById("screenOne");
+const screenTwo = document.getElementById("screenTwo");
+const phoneInput = document.getElementById("phone");
+document.getElementById("continueButton").addEventListener("click", () => {
+  errorBox.style.display = "none";
+  const phone = phoneInput.value.trim().replace(/[\s()+-]/g, "");
+  if (!/^\d{9,15}$/.test(phone)) {
+    errorBox.textContent = "Ingresa un número de WhatsApp válido (entre 9 y 15 dígitos).";
+    errorBox.style.display = "block";
+    phoneInput.focus();
+    return;
+  }
+  phoneInput.value = phone;
+  phoneInput.required = false;
+  screenOne.classList.add("screen-hidden");
+  screenTwo.classList.remove("screen-hidden");
+  window.scrollTo({top: 0, behavior: "smooth"});
+});
+document.getElementById("backButton").addEventListener("click", () => {
+  screenTwo.classList.add("screen-hidden");
+  screenOne.classList.remove("screen-hidden");
+  phoneInput.required = true;
+  window.scrollTo({top: 0, behavior: "smooth"});
+});
 
 function normalize(s) {
   return (s || "").normalize("NFD").replace(/[\\u0300-\\u036f]/g, "").toLowerCase().trim();
@@ -210,6 +246,15 @@ document.getElementById("shippingForm").addEventListener("submit", e => {
   e.preventDefault();
   errorBox.style.display = "none";
   if (!e.currentTarget.reportValidity()) return;
+  if (!/^\d{9,15}$/.test(phoneInput.value.trim())) {
+    errorBox.textContent = "Ingresa un número de WhatsApp válido en la primera pantalla.";
+    errorBox.style.display = "block";
+    screenTwo.classList.add("screen-hidden");
+    screenOne.classList.remove("screen-hidden");
+    phoneInput.required = true;
+    phoneInput.focus();
+    return;
+  }
   if (!departmentSelect.value) {
     errorBox.textContent = "Selecciona primero el departamento donde deseas enviar el paquete.";
     errorBox.style.display = "block";
