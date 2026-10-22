@@ -1,0 +1,16 @@
+{
+  "name": "herox-agencias-shalom",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Formulario HEROX con búsqueda de agencias Shalom mediante un pequeño servidor intermediario.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}

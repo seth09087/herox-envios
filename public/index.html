@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111111">
+<title>HEROX | Formulario de envío</title>
+<style>
+:root{--ink:#172033;--muted:#64748b;--line:#cbd5e1;--orange:#e87900;--green:#16834a}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(#faf6f7,#f7f9fc);font-family:Arial,Helvetica,sans-serif;color:var(--ink)}
+header{background:#fff;border-bottom:1px solid #f4c7ce;padding:20px max(22px,calc((100% - 650px)/2));}
+.brand{font-size:27px;font-weight:900;letter-spacing:4px}.subbrand{font-size:11px;letter-spacing:2px;margin-top:4px}
+.wrap{max-width:650px;margin:26px auto;padding:0 16px 32px}
+.notice{background:#fff7f0;border:1px solid #fecaca;color:#9f1239;border-radius:12px;padding:13px 15px;font-size:14px;margin-bottom:20px}
+.card{background:#fff;border:1px solid #fecdd3;border-radius:24px;padding:24px;margin-bottom:16px;box-shadow:0 12px 25px #11100008}
+h2{font-size:17px;margin:0 0 7px}.desc{font-size:13px;color:#475569;margin:0 0 20px;line-height:1.5}
+.step{display:inline-flex;align-items:center;justify-content:center;width:25px;height:25px;border-radius:50%;background:var(--orange);color:#fff;font-weight:700;margin-right:8px}
+label{display:block;font-size:13px;font-weight:700;margin:16px 0 7px}
+input,select{width:100%;padding:13px 12px;border:1px solid var(--line);border-radius:15px;background:#fff;font-size:15px;color:var(--ink)}
+input:focus,select:focus{outline:2px solid #fed7aa;border-color:var(--orange)}
+.small{font-size:12px;color:var(--muted);line-height:1.5;margin-top:6px}
+.searchbox{position:relative}
+.results{display:none;border:1px solid var(--line);border-radius:13px;margin-top:6px;max-height:260px;overflow-y:auto;background:#fff;box-shadow:0 8px 20px #0000000c}
+.result{display:block;width:100%;text-align:left;border:0;border-radius:0;background:#fff;color:var(--ink);padding:13px 12px;cursor:pointer;border-bottom:1px solid #f1f5f9}
+.result:hover,.result:focus{background:#eef2ff}.result strong{font-size:13px;display:block;line-height:1.4}.result span{font-size:12px;color:#64748b;display:block;margin-top:4px;line-height:1.4}
+.status{font-size:12px;color:#64748b;margin-top:7px;min-height:16px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+.consent{display:flex;gap:9px;align-items:flex-start;font-size:12px;line-height:1.5;color:#52525b;margin:18px 0}
+.consent input{width:auto;margin-top:3px}
+button.submit{width:100%;border:0;border-radius:16px;background:var(--orange);color:#fff;padding:14px;font-size:15px;font-weight:800;cursor:pointer;box-shadow:0 8px 14px #e8790030}
+button.submit:hover{background:#c96500}
+footer{text-align:center;font-size:11px;color:#64748b;padding:16px}
+.error{display:none;background:#fff1f2;color:#9f1239;padding:11px;border-radius:10px;margin-bottom:14px;font-size:13px}
+@media(max-width:520px){.grid{grid-template-columns:1fr}.card{padding:19px}.brand{font-size:24px}}
+</style>
+</head>
+<body>
+<header><div class="brand">HEROX</div><div class="subbrand">FORMULARIO DE ENVÍO</div></header>
+<div class="wrap">
+  <div class="notice">ⓘ Verifica cuidadosamente la agencia Shalom y los datos del destinatario antes de solicitar el envío.</div>
+  <div id="error" class="error"></div>
+  <form id="shippingForm">
+    <section class="card">
+      <h2><span class="step">1</span>Detalles del envío</h2>
+      <p class="desc">Primero elige el departamento del Perú. Después podrás buscar y seleccionar una agencia Shalom disponible en esa zona.</p>
+      <label for="department">Departamento *</label>
+      <select id="department" required>
+        <option value="">Selecciona un departamento</option>
+        <option>Amazonas</option><option>Áncash</option><option>Apurímac</option><option>Arequipa</option>
+        <option>Ayacucho</option><option>Cajamarca</option><option>Callao</option><option>Cusco</option>
+        <option>Huancavelica</option><option>Huánuco</option><option>Ica</option><option>Junín</option>
+        <option>La Libertad</option><option>Lambayeque</option><option>Lima</option><option>Loreto</option>
+        <option>Madre de Dios</option><option>Moquegua</option><option>Pasco</option><option>Piura</option>
+        <option>Puno</option><option>San Martín</option><option>Tacna</option><option>Tumbes</option>
+        <option>Ucayali</option>
+      </select>
+      <label for="agencySearch">Buscar agencia Shalom *</label>
+      <div class="searchbox">
+        <input id="agencySearch" autocomplete="off" placeholder="Primero selecciona un departamento" required disabled>
+        <div id="results" class="results" role="listbox"></div>
+        <div id="searchStatus" class="status">Selecciona un departamento para comenzar.</div>
+      </div>
+      <div id="selectedAgency" class="small">Aún no has seleccionado una agencia.</div>
+      <label for="shipDate">Fecha de envío (opcional)</label>
+      <input id="shipDate" type="date">
+      <p class="small">Confirma con Shalom qué fechas y servicios están disponibles. Esta página no verifica ni reserva cupos.</p>
+    </section>
+    <section class="card">
+      <h2><span class="step">2</span>Datos del destinatario</h2>
+      <p class="desc">Persona autorizada para recoger el paquete en la agencia con su documento.</p>
+      <label for="phone">Tu WhatsApp / celular *</label>
+      <input id="phone" inputmode="tel" autocomplete="tel" maxlength="20" required placeholder="Ej. 961589198">
+      <div class="grid">
+        <div><label for="firstName">Nombres *</label><input id="firstName" autocomplete="given-name" required maxlength="60"></div>
+        <div><label for="lastName">Apellidos *</label><input id="lastName" autocomplete="family-name" required maxlength="80"></div>
+      </div>
+      <label for="dni">DNI/CE para recoger *</label>
+      <input id="dni" inputmode="numeric" maxlength="12" required placeholder="Documento del destinatario">
+      <label for="order">Pedido HEROX (opcional)</label>
+      <input id="order" maxlength="100" placeholder="Ej. Casaca negra, talla M">
+      <label class="consent"><input id="consent" type="checkbox" required><span>Autorizo a HEROX a usar estos datos para coordinar este envío y contactarme sobre el pedido.</span></label>
+      <button class="submit" type="submit">Solicitar envío por WhatsApp</button>
+    </section>
+  </form>
+  <p class="small">El catálogo consultado es un servicio externo independiente, no una integración oficial garantizada por Shalom. Verifica los datos de la agencia antes de enviar. Este formulario abre WhatsApp; no crea una guía oficial ni guarda pedidos.</p>
+  <footer>© HEROX · Registro de envíos</footer>
+</div>
+<script>
+const WHATSAPP_NUMBER = "51926239724"; // Verifica que sea el WhatsApp correcto de HEROX.
+const API = "/api/agencies";
+const departmentSelect = document.getElementById("department");
+const searchInput = document.getElementById("agencySearch");
+const resultsBox = document.getElementById("results");
+const searchStatus = document.getElementById("searchStatus");
+const selectedAgencyText = document.getElementById("selectedAgency");
+const errorBox = document.getElementById("error");
+let selectedAgency = null;
+let requestController = null;
+let debounceTimer = null;
+
+function normalize(s) {
+  return (s || "").normalize("NFD").replace(/[\\u0300-\\u036f]/g, "").toLowerCase().trim();
+}
+function agencyTitle(a) {
+  return a.nombre || [a.departamento, a.provincia, a.zona, a.lugar_over].filter(Boolean).join(" / ") || "Agencia Shalom";
+}
+function agencyAddress(a) {
+  return a.direccion || a.referencia || "";
+}
+function agencyDepartment(a) {
+  return a.departamento || a.departamento_nombre || "";
+}
+function renderResults(items) {
+  resultsBox.innerHTML = "";
+  if (!items.length) {
+    resultsBox.style.display = "block";
+    searchStatus.textContent = "No encontramos agencias en ese departamento con esa búsqueda. Prueba con otra palabra.";
+    return;
+  }
+  items.forEach(a => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "result";
+    b.setAttribute("role", "option");
+    const title = document.createElement("strong");
+    title.textContent = agencyTitle(a);
+    const address = document.createElement("span");
+    address.textContent = [agencyAddress(a), a.provincia, agencyDepartment(a)].filter(Boolean).join(" · ");
+    b.append(title, address);
+    b.addEventListener("click", () => {
+      selectedAgency = a;
+      searchInput.value = agencyTitle(a);
+      selectedAgencyText.textContent = "Agencia seleccionada: " + agencyTitle(a) + (agencyAddress(a) ? " — " + agencyAddress(a) : "");
+      resultsBox.style.display = "none";
+      searchStatus.textContent = "Agencia seleccionada. Verifica que sea la correcta.";
+    });
+    resultsBox.appendChild(b);
+  });
+  resultsBox.style.display = "block";
+  searchStatus.textContent = "Selecciona una agencia de la lista. Resultados encontrados: " + items.length + ".";
+}
+async function searchAgencies(q) {
+  const department = departmentSelect.value;
+  if (!department) {
+    searchStatus.textContent = "Primero selecciona un departamento.";
+    return;
+  }
+  if (requestController) requestController.abort();
+  requestController = new AbortController();
+  searchStatus.textContent = "Buscando agencias en " + department + "…";
+  try {
+    const params = new URLSearchParams();
+    if (q && q.trim().length >= 2) params.set("q", q.trim());
+    params.set("department", department);
+    params.set("per_page", "100");
+    const url = API + "?" + params.toString();
+    const response = await fetch(url, {signal: requestController.signal});
+    if (!response.ok) throw new Error("HTTP " + response.status);
+    const payload = await response.json();
+    const rawItems = Array.isArray(payload) ? payload : (payload.data || payload.items || payload.agencies || []);
+    const wantedDept = normalize(department);
+    const filtered = rawItems.filter(a => {
+      const dep = normalize(agencyDepartment(a));
+      // Si el catálogo no incluye el campo departamento, no descartamos el resultado automáticamente.
+      return !dep || dep.includes(wantedDept) || wantedDept.includes(dep);
+    });
+    renderResults(filtered);
+  } catch (err) {
+    if (err.name === "AbortError") return;
+    resultsBox.style.display = "none";
+    searchStatus.textContent = "No se pudo consultar el catálogo. Revisa tu internet e inténtalo otra vez.";
+  }
+}
+departmentSelect.addEventListener("change", () => {
+  selectedAgency = null;
+  searchInput.value = "";
+  searchInput.disabled = !departmentSelect.value;
+  searchInput.placeholder = departmentSelect.value ? "Escribe ciudad, distrito o nombre de agencia…" : "Primero selecciona un departamento";
+  selectedAgencyText.textContent = "Aún no has seleccionado una agencia.";
+  resultsBox.style.display = "none";
+  if (departmentSelect.value) {
+    searchStatus.textContent = "Escribe al menos 2 letras para buscar en " + departmentSelect.value + ".";
+    searchAgencies("");
+  } else {
+    searchStatus.textContent = "Selecciona un departamento para comenzar.";
+  }
+});
+searchInput.addEventListener("input", () => {
+  selectedAgency = null;
+  selectedAgencyText.textContent = "Selecciona una agencia de los resultados.";
+  const q = searchInput.value.trim();
+  clearTimeout(debounceTimer);
+  if (!departmentSelect.value) {
+    searchStatus.textContent = "Primero selecciona un departamento.";
+    return;
+  }
+  if (q.length < 2) {
+    resultsBox.style.display = "none";
+    searchStatus.textContent = "Escribe al menos 2 letras para buscar en " + departmentSelect.value + ".";
+    return;
+  }
+  debounceTimer = setTimeout(() => searchAgencies(q), 350);
+});
+searchInput.addEventListener("focus", () => {
+  if (departmentSelect.value && searchInput.value.trim().length >= 2 && !selectedAgency) searchAgencies(searchInput.value.trim());
+});
+document.addEventListener("click", e => {
+  if (!e.target.closest(".searchbox")) resultsBox.style.display = "none";
+});
+document.getElementById("shippingForm").addEventListener("submit", e => {
+  e.preventDefault();
+  errorBox.style.display = "none";
+  if (!e.currentTarget.reportValidity()) return;
+  if (!departmentSelect.value) {
+    errorBox.textContent = "Selecciona primero el departamento donde deseas enviar el paquete.";
+    errorBox.style.display = "block";
+    departmentSelect.focus();
+    return;
+  }
+  if (!selectedAgency) {
+    errorBox.textContent = "Busca y selecciona una agencia Shalom de la lista antes de continuar.";
+    errorBox.style.display = "block";
+    searchInput.focus();
+    return;
+  }
+  if (!/^\d{9,15}$/.test(WHATSAPP_NUMBER)) {
+    errorBox.textContent = "Configura el número receptor de WhatsApp de HEROX en el código.";
+    errorBox.style.display = "block";
+    return;
+  }
+  const v = id => document.getElementById(id).value.trim();
+  const date = v("shipDate");
+  const formattedDate = date ? date.split("-").reverse().join("/") : "Por coordinar";
+  const msg = [
+    "📦 NUEVO ENVÍO HEROX (AGENCIA)",
+    "",
+    "👤 " + v("firstName") + " " + v("lastName"),
+    "📱 " + v("phone"),
+    "🪪 DNI/CE: " + v("dni"),
+    "🏢 Agencia: " + agencyTitle(selectedAgency),
+    "📍 Dirección: " + (agencyAddress(selectedAgency) || "No indicada"),
+    "🗺️ Departamento: " + (agencyDepartment(selectedAgency) || departmentSelect.value),
+    "🚚 Shalom",
+    "📅 Fecha de envío: " + formattedDate,
+    "🛍️ Pedido: " + (v("order") || "No indicado"),
+    "",
+    "Por favor, confirmar los datos del envío."
+  ].join("\n");
+  window.open("https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(msg), "_blank", "noopener,noreferrer");
+});
+</script>
+</body>
+</html>
